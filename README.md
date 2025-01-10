@@ -271,7 +271,7 @@ The UpdateSet Analyser application is organized into several directories that co
 
 - **updateset_analyser**: The `updateset_analyser` directory contains the source code of the UpdateSet Analyser application. 
 
-- **tests**: The `tests` directory contains the tests of the UpdateSet Analyser application.
+- **tests**: The `tests` directory contains the tests of the UpdateSet Analyser application. **`IN PROGRESS`**
 
 In addition to these directories, the following files are also important:
 
@@ -380,3 +380,7 @@ To use the UpdateSet Analyser application, you need to follow the steps below:
 5. Access the **UpdateSet** record that you analyzed and check the analysis in the **Description** field.
 
 6. Access the **Customer Update** record that you analyzed and check the summary in the **Comments** field.
+
+## License
+
+This project is licensed under the **BEER-WARE LICENSE** - see the [LICENSE](LICENSE) file for details.
