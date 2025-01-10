@@ -1,0 +1,66 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4.0.5-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "user"
+      RABBITMQ_DEFAULT_PASS: "password"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    environment:
+      CELERY_BROKER_URL: "amqp://user:password@rabbitmq:5672"
+    depends_on:
+      - rabbitmq
+  otel:
+    image: grafana/otel-lgtm:latest
+    ports:
+      - 3000:3000 # grafana
+      - 9090:9090 # prometheus
+      - 4318:4318 # otel collector http
+      - 4317:4317 # otel collector grpc
+  mid-server:
+    build: ./mid-server/
+    env_file:
+      - ./mid-server/mid.env
+  api:
+    build: ./
+    environment:
+      - LOG_LEVEL=debug
+      - START_MODE=api
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel:4317
+      - OTEL_METRICS_EXPORTER=otlp
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_SERVICE_NAME=api
+      - OTEL_METRIC_EXPORT_INTERVAL=1000
+      - COLLECTOR_OTLP_ENABLED=true
+    depends_on:
+      - worker
+    ports:
+      - "8000:8000"
+  worker:
+    build: ./
+    environment:
+      - LOG_LEVEL=DEBUG
+      - START_MODE=worker
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel:4317
+      - OTEL_METRICS_EXPORTER=otlp
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_SERVICE_NAME=worker
+      - OTEL_METRIC_EXPORT_INTERVAL=1000
+      - COLLECTOR_OTLP_ENABLED=true
+    depends_on:
+      - rabbitmq
+      - redis
+      - otel

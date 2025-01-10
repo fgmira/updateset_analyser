@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "updateset-analyser"
+version = "0.1.0"
+description = ""
+authors = ["Fabio Mira <fgmira@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+celery = "^5.4.0"
+httpx = "^0.28.1"
+fastapi = {extras = ["standard"], version = "^0.115.6"}
+pydantic-settings = "^2.7.0"
+openai = "^1.58.1"
+redis = "^5.2.1"
+pytest = "^8.3.4"
+pytest-env = "^1.1.5"
+pytest-mock = "^3.14.0"
+pytest-cov = "^6.0.0"
+pytest-celery = "^1.1.3"
+
+[tool.pytest.ini_options]
+pythonpath = [".", "updateset_analyser"]
+
+[tool.pytest_env]
+UPDATESET_ANALYSER_SERVICE_NOW_USER="service_now_user"
+UPDATESET_ANALYSER_SERVICE_NOW_PASSWORD="service_now_pwd"
+UPDATESET_ANALYSER_SERVICE_NOW_URL="https://dev.service-now.com"
+UPDATESET_ANALYSER_CELERY_BROKER_HOST="rabbitmq"
+UPDATESET_ANALYSER_CELERY_BROKER_PORT=5672
+UPDATESET_ANALYSER_CELERY_BROKER_USER="user"
+UPDATESET_ANALYSER_CELERY_BROKER_PASSWORD="password"
+UPDATESET_ANALYSER_OPENAI_API_KEY="sk-pipoca-123"
+UPDATESET_ANALYSER_REDIS_HOST="redis"
+UPDATESET_ANALYSER_REDIS_PORT=6379
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
